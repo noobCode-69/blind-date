@@ -26,11 +26,13 @@ import {
 
 export default function Tray({ leaveCall }) {
   const callObject = useDaily();
-  const { isSharingScreen, startScreenShare, stopScreenShare } = useScreenShare();
+
+  const isOwner = callObject._participants.local.owner;
 
   const [showMeetingInformation, setShowMeetingInformation] = useState(false);
   const [showChat, setShowChat] = useState(false);
   const [newChatMessage, setNewChatMessage] = useState(false);
+  // const [isRecording, setIsRecording] = useState(false);
 
   const localParticipant = useLocalParticipant();
   const localVideo = useVideoTrack(localParticipant?.session_id);
@@ -59,8 +61,6 @@ export default function Tray({ leaveCall }) {
     callObject.setLocalAudio(mutedAudio);
   }, [callObject, mutedAudio]);
 
-  const toggleScreenShare = () => (isSharingScreen ? stopScreenShare() : startScreenShare());
-
   const toggleMeetingInformation = () => {
     setShowMeetingInformation(!showMeetingInformation);
   };
@@ -72,16 +72,17 @@ export default function Tray({ leaveCall }) {
     }
   };
 
+  
   return (
     <div className="tray">
       {showMeetingInformation && <MeetingInformation />}
-      {/*  The chat messages 'live' in the <Chat/> component's state. We can't just remove the component */}
-      {/*  from the DOM when hiding the chat, because that would cause us to lose that state. So we're */}
-      {/*  choosing a slightly different approach of toggling the chat: always render the component, but only */}
-      {/*  render its HTML when showChat is set to true. */}
+      {/*  The chat messages 'live' in the <Chat/> component's state. We can't just remove the component*/}
+      {/*  from the DOM when hiding the chat, because that would cause us to lose that state. So we're*/}
+      {/*  choosing a slightly different approach of toggling the chat: always render the component, but only*/}
+      {/*  render its HTML when showChat is set to true.*/}
 
-      {/*   We're also passing down the toggleChat() function to the component, so we can open and close the chat */}
-      {/*   from the chat UI and not just the Tray. */}
+      {/*   We're also passing down the toggleChat() function to the component, so we can open and close the chat*/}
+      {/*   from the chat UI and not just the Tray.*/}
       <Chat showChat={showChat} toggleChat={toggleChat} />
       <div className="tray-buttons-container">
         <div className="controls">
@@ -95,10 +96,6 @@ export default function Tray({ leaveCall }) {
           </button>
         </div>
         <div className="actions">
-          <button onClick={toggleScreenShare}>
-            <Screenshare />
-            {isSharingScreen ? 'Stop sharing screen' : 'Share screen'}
-          </button>
           <button onClick={toggleMeetingInformation}>
             <Info />
             {showMeetingInformation ? 'Hide info' : 'Show info'}

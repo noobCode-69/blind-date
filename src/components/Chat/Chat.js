@@ -1,26 +1,33 @@
 import { useCallback, useState } from 'react';
-import { useAppMessage, useLocalParticipant } from '@daily-co/daily-react-hooks';
+import { useAppMessage, useDaily , useLocalParticipant } from '@daily-co/daily-react-hooks';
 
 import { Arrow } from '../Tray/Icons/index';
 import './Chat.css';
 
 export default function Chat({ showChat, toggleChat }) {
   const localParticipant = useLocalParticipant();
+  const callObject = useDaily();
+
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
 
   const sendAppMessage = useAppMessage({
-    onAppMessage: useCallback(
-      (ev) =>
+    onAppMessage: useCallback((ev) => {
+      if (ev.data.type != 'CHAT') {
+        callObject.updateParticipant(ev.data.msg, {
+          setSubscribedTracks: { audio: true, video: true, screenVideo: false },
+        })
+
+      } else {
         setMessages((messages) => [
           ...messages,
           {
             msg: ev.data.msg,
             name: ev.data.name,
           },
-        ]),
-      [],
-    ),
+        ]);
+      }
+    }, []),
   });
 
   const sendMessage = useCallback(
@@ -30,6 +37,7 @@ export default function Chat({ showChat, toggleChat }) {
        */
       sendAppMessage(
         {
+          type: 'CHAT',
           msg: message,
           name: localParticipant?.user_name || 'Guest',
         },

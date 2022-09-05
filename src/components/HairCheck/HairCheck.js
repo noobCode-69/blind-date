@@ -19,6 +19,32 @@ export default function HairCheck({ joinCall, cancelCall }) {
 
   const [getUserMediaError, setGetUserMediaError] = useState(false);
 
+  const [password, setPassword] = useState('');
+
+  let getMeetingToken = async (owner) => {
+    let response;
+    try {
+      response = await fetch(`https://api.daily.co/v1/meeting-tokens`, {
+        method: 'POST',
+        body: JSON.stringify({
+          properties: {
+            is_owner: owner == true ? true : false,
+            // enable_recording: owner == true ? 'cloud' : null,
+            enable_recording: 'cloud',
+          },
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + process.env.REACT_APP_DAILY_API_KEY,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    const data = await response.json();
+    return data;
+  };
+
   useDailyEvent(
     'camera-error',
     useCallback(() => {
@@ -30,9 +56,15 @@ export default function HairCheck({ joinCall, cancelCall }) {
     callObject.setUserName(e.target.value);
   };
 
-  const join = (e) => {
+  const join = async (e) => {
     e.preventDefault();
-    joinCall();
+    let token;
+    if (password === process.env.OWNER_LOGIN_PASSWORD) {
+      token = await getMeetingToken(true);
+    } else {
+      token = await getMeetingToken(false);
+    }
+    joinCall(token);
   };
 
   useEffect(() => {
@@ -61,10 +93,10 @@ export default function HairCheck({ joinCall, cancelCall }) {
       ) : (
         <form className="hair-check" onSubmit={join}>
           <h1>Setup your hardware</h1>
-          {/* Video preview */}
+          {/*Video preview*/}
           {videoTrack?.persistentTrack && <video autoPlay muted playsInline ref={videoElement} />}
 
-          {/* Username */}
+          {/*Username*/}
           <div>
             <label htmlFor="username">Your name:</label>
             <input
@@ -76,7 +108,18 @@ export default function HairCheck({ joinCall, cancelCall }) {
             />
           </div>
 
-          {/* Microphone select */}
+          <div>
+            <label htmlFor="ownerPassword">Owner Login:</label>
+            <input
+              name="ownerPassword"
+              type="password"
+              placeholder="Enter password to enter as moderator"
+              onChange={(e) => setPassword(e.target.value.trim())}
+              value={password}
+            />
+          </div>
+
+          {/*Microphone select*/}
           <div>
             <label htmlFor="micOptions">Microphone:</label>
             <select name="micOptions" id="micSelect" onChange={updateMicrophone}>
@@ -88,7 +131,7 @@ export default function HairCheck({ joinCall, cancelCall }) {
             </select>
           </div>
 
-          {/* Speakers select */}
+          {/*Speakers select*/}
           <div>
             <label htmlFor="speakersOptions">Speakers:</label>
             <select name="speakersOptions" id="speakersSelect" onChange={updateSpeakers}>
@@ -100,7 +143,7 @@ export default function HairCheck({ joinCall, cancelCall }) {
             </select>
           </div>
 
-          {/* Camera select */}
+          {/*Camera select*/}
           <div>
             <label htmlFor="cameraOptions">Camera:</label>
             <select name="cameraOptions" id="cameraSelect" onChange={updateCamera}>

@@ -5,6 +5,7 @@ export function roomUrlFromPageUrl() {
 
 export function pageUrlFromRoomUrl(roomUrl) {
   return (
-    window.location.href.split('?')[0] + (roomUrl ? `?roomUrl=${encodeURIComponent(roomUrl)}` : '')
+    window.location.href.split('?')[0] +
+    (roomUrl ? `?roomUrl=${encodeURIComponent(roomUrl)}` : '')
   );
 }

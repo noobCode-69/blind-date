@@ -5,52 +5,78 @@
    https://www.daily.co/blog/add-pagination-to-a-custom-daily-video-chat-app-to-support-larger-meetings/
  */
 .call {
-  display: grid;
-  padding: 5rem;
-  align-items: center;
-  justify-items: center;
-  grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
-  grid-auto-rows: 1fr;
-  grid-column-gap: 30px;
-  grid-row-gap: 30px;
+  /* display: grid; */
+
+  display: flex;
+  flex-wrap: nowrap;
+  padding: 3rem;
+  gap: 1rem;
+  align-items: stretch;
+  justify-content: center;
   width: 100%;
+  height: 100vh;
+  /* outline: 2px solid red; */
   position: relative;
+}
+
+
+
+.pinned-user {
+  height: 100%;
+  width: 400px;
+  flex-grow: 1;
+  flex-shrink: 1.5;
+  height: 70%;
+
+
+}
+
+.aside {
+  height: 100%;
+  flex-grow: 1;
+  flex-shrink: 1;
+  padding: 1rem;
+  /* padding-top: 0; */
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+
+  overflow-y: auto;
+
+  grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+
+  /* outline: 2px solid red; */
+}
+
+.aside {
+  -ms-overflow-style: none;
+  /* Internet Explorer 10+ */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+.aside::-webkit-scrollbar {
+  display: none;
+  /* Safari and Chrome */
 }
 
 @media only screen and (max-width: 600px) {
   .call {
     padding: 0;
-    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-    grid-auto-rows: unset;
   }
 }
 
-.is-screenshare {
-  display: grid;
-  padding: 5rem;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  grid-row-gap: 15px;
-}
 
 /*
   When someone is sharing their screen, we want to resize the participants' videos,
   so the biggest screen in our grid is the screen share.
  */
-.is-screenshare .self-view {
-  width: 240px;
-  height: 135px;
-}
-
-/* Resize remote participants when a screen is being shared */
-.is-screenshare .tile-video {
-  width: 240px;
-  height: 135px;
-}
 
 .info-box {
   background: var(--dark-blue-border);
   color: var(--white);
-  width: 480px;
+  /* width: 480px; */
+  flex-shrink: 1;
   height: 270px;
   display: flex;
   justify-content: center;

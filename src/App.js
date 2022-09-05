@@ -50,20 +50,25 @@ export default function App() {
    * We've created a room, so let's start the hair check. We won't be joining the call yet.
    */
   const startHairCheck = useCallback(async (url) => {
-    const newCallObject = DailyIframe.createCallObject();
+    const newCallObject = DailyIframe.createCallObject({
+      subscribeToTracksAutomatically: false
+    });
     setRoomUrl(url);
     setCallObject(newCallObject);
     setAppState(STATE_HAIRCHECK);
-    await newCallObject.preAuth({ url }); // add a meeting token here if your room is private
+    // await newCallObject.preAuth({ url }); // add a meeting token here if your room is private
     await newCallObject.startCamera();
   }, []);
 
   /**
    * Once we pass the hair check, we can actually join the call.
    */
-  const joinCall = useCallback(() => {
-    callObject.join({ url: roomUrl });
-  }, [callObject, roomUrl]);
+  const joinCall = useCallback(
+    (token) => {
+      callObject.join({ url: roomUrl, token: token.token });
+    },
+    [callObject, roomUrl],
+  );
 
   /**
    * Start leaving the current call.
@@ -79,7 +84,7 @@ export default function App() {
       });
     } else {
       /* This will trigger a `left-meeting` event, which in turn will trigger
-      the full clean-up as seen in handleNewMeetingState() below. */
+      the full clean-up as seen in handleNewMeetingState() below.*/
       setAppState(STATE_LEAVING);
       callObject.leave();
     }
@@ -164,7 +169,7 @@ export default function App() {
   const showCall = !apiError && [STATE_JOINING, STATE_JOINED, STATE_ERROR].includes(appState);
 
   /* When there's no problems creating the room and startHairCheck() has been successfully called,
-   * we can show the hair check UI. */
+   * we can show the hair check UI.*/
   const showHairCheck = !apiError && appState === STATE_HAIRCHECK;
 
   const renderApp = () => {

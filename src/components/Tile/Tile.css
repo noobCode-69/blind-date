@@ -1,50 +1,67 @@
 .tile-video {
   position: relative;
-  width: 480px;
-  height: 270px;
+  width: 100%;
+  height: 165px;
+  max-width: 200px;
+  background: url('https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__480.png');
+
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-color: #e4e6e7;
+  background-position: center center;
 }
 
-@media only screen and (max-width: 600px) {
-  .tile-video {
-    width: 240px;
-    height: 135px;
-  }
+
+
+.pinned {
+  max-width: none;
+  width: 100%;
+  height: 100%;
 }
 
 .self-view {
-  width: 480px;
-  height: 270px;
   position: relative;
 }
 
-@media only screen and (max-width: 600px) {
-  .self-view {
-    width: 240px;
-    height: 135px;
-  }
-}
 
-/* Hard-code the self-view size if there's no one else in the call, just to make it align with the info-box */
-.self-view.alone {
-  width: 480px;
-  height: 270px;
-}
-
-@media only screen and (max-width: 600px) {
-  .self-view.alone {
-    width: 240px;
-    height: 135px;
-  }
-}
 
 .self-view video {
-  /* Mirror the self-view: it's weird not seeing yourself mirrored! */
   transform: rotate3d(0, 1, 0, 180deg);
   position: relative;
 }
 
-/* Put screen share front and center in our grid when there is one active */
-.tile-screenshare {
-  grid-column: 1 / -1;
-  grid-row: 1;
+
+.user-info-container {
+  /* background-color: var(--dark-blue); */
+
+  position: absolute;
+  width: 100%;
+  overflow: hidden;
+  bottom: 0;
+  left: 0;
+
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+
+  /* gap: 1rem; */
+}
+
+
+.user-info-container>* {
+  border-radius: 4px;
+  /* background-color: var(--dark-blue); */
+  color: var(--grey);
+  font-size: 14px;
+  padding: 0.25rem 0.5rem;
+}
+
+.pin-button {
+  background: transparent;
+  cursor: pointer;
+}
+
+
+.subscribe-button {
+  cursor: pointer;
 }
