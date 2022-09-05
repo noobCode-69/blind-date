@@ -58,8 +58,10 @@ export default function HairCheck({ joinCall, cancelCall }) {
 
   const join = async (e) => {
     e.preventDefault();
+    // console.log(process.env.OWNER_LOGIN_PASSWORD);
+
     let token;
-    if (password === process.env.OWNER_LOGIN_PASSWORD) {
+    if (password === 'owner@123') {
       token = await getMeetingToken(true);
     } else {
       token = await getMeetingToken(false);

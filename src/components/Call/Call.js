@@ -36,21 +36,27 @@ export default function Call() {
   const localParticipant = useLocalParticipant();
   const isAlone = useMemo(() => remoteParticipantIds?.length < 1, [remoteParticipantIds]);
 
+  const startRecording = async () => {
+    await callObject.startRecording({
+      backgroundColor: '#FF1F2D3D',
+      layout: {
+        preset: 'active-participant',
+      },
+    });
+  };
+
   useEffect(() => {
     if (localParticipant == null || localParticipant == undefined) {
       return;
     }
     if (isOwner) {
-      const startRecording = async () => {
-        await callObject.startRecording({
-          backgroundColor: '#FF1F2D3D',
-          layout: {
-            preset: 'active-participant',
-          },
-        });
-      };
       startRecording();
     }
+    callObject.updateParticipant('local', {
+      setSubscribedTracks: { audio: false, video: true, screenVideo: false },
+    });
+
+    console.log('Callobject', callObject);
   }, [localParticipant]);
 
   useEffect(() => {

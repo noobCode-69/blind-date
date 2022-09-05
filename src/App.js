@@ -84,7 +84,7 @@ export default function App() {
       });
     } else {
       /* This will trigger a `left-meeting` event, which in turn will trigger
-      the full clean-up as seen in handleNewMeetingState() below.*/
+      the full clean-up as seen in handleNewMeetingState() below. */
       setAppState(STATE_LEAVING);
       callObject.leave();
     }
@@ -169,7 +169,7 @@ export default function App() {
   const showCall = !apiError && [STATE_JOINING, STATE_JOINED, STATE_ERROR].includes(appState);
 
   /* When there's no problems creating the room and startHairCheck() has been successfully called,
-   * we can show the hair check UI.*/
+   * we can show the hair check UI. */
   const showHairCheck = !apiError && appState === STATE_HAIRCHECK;
 
   const renderApp = () => {
