@@ -13,6 +13,8 @@ import UserMediaError from '../UserMediaError/UserMediaError';
 export default function Call() {
   /* If a participant runs into a getUserMedia() error, we need to warn them. */
 
+
+
   const callObject = useDaily();
   const [getUserMediaError, setGetUserMediaError] = useState(false);
   const isOwner = callObject._participants.local.owner;
@@ -46,17 +48,22 @@ export default function Call() {
   };
 
   useEffect(() => {
-    if (localParticipant == null || localParticipant == undefined) {
+
+    
+    if (localParticipant == null || localParticipant == undefined ) {
       return;
     }
+
+
     if (isOwner) {
       startRecording();
     }
+    
     callObject.updateParticipant('local', {
       setSubscribedTracks: { audio: false, video: true, screenVideo: false },
     });
 
-    console.log('Callobject', callObject);
+
   }, [localParticipant]);
 
   useEffect(() => {

@@ -13,12 +13,13 @@ export default function Tile({ id, isLocal, isPinned, onPin, onUnpin }) {
   const isOwner = callObject._participants.local.owner;
 
   const [activeSpeaker, setActiveSpeaker] = useState(false);
+
+
   const [faceRevealButtonForOwner , setFaceRevealButtonForOwner] = useState(false);
 
   useEffect(() => {
     callObject.on('active-speaker-change', (val) => {
       const speaker = val.activeSpeaker.peerId;
-      // console.log(speaker);
       if (speaker === id) {
         setActiveSpeaker(true);
       } else {
@@ -84,10 +85,13 @@ export default function Tile({ id, isLocal, isPinned, onPin, onUnpin }) {
 
   let sendMessage = (id) => {
     if(faceRevealButtonForOwner == true){
-      return ;
+      setFaceRevealButtonForOwner(false);
+      callObject.sendAppMessage({type : "UNSUBSCRIBE" , msg : id }, '*');
     }
-    setFaceRevealButtonForOwner(true);
-    callObject.sendAppMessage({ type: 'SUBSCRIBE', msg: id }, '*');
+    else{
+      setFaceRevealButtonForOwner(true);
+      callObject.sendAppMessage({ type: 'SUBSCRIBE', msg: id }, '*');
+    }
   };
 
   return (
@@ -102,6 +106,8 @@ export default function Tile({ id, isLocal, isPinned, onPin, onUnpin }) {
       <div className="user-info-container">
         <Username id={id} isLocal={isLocal} />
         {pinUnpin()}
+
+
         {isOwner == true && (
           <div className="subscribe-button" onClick={() => sendMessage(id)}>
             <div style={{width: "15px" , height: "15px" , borderRadius: "100%" , backgroundColor : faceRevealButtonForOwner == false ? "red": "green"}} ></div>
