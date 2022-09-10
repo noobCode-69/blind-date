@@ -13,21 +13,7 @@ export default function Chat({ showChat, toggleChat }) {
 
   const sendAppMessage = useAppMessage({
     onAppMessage: useCallback((ev) => {
-
-
-
-      if (ev.data.type == 'SUBSCRIBE') {
-        // console.log("subscribe to" , ev.data.msg);
-        callObject.updateParticipant(ev.data.msg, {
-          setSubscribedTracks: { audio: true, video: true, screenVideo: false },
-        })
-      }
-      else if(ev.data.type == 'UNSUBSCRIBE'){
-        // console.log("unsubscribe to" , ev.data.msg);
-        callObject.updateParticipant(ev.data.msg, {
-          setSubscribedTracks: { audio: true, video: false, screenVideo: false },
-        })
-      } else {
+      if(ev.data.type != 'SUBSCRIBE' && ev.data.type != 'UNSUBSCRIBE'){
         setMessages((messages) => [
           ...messages,
           {

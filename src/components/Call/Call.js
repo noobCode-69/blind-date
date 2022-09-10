@@ -3,22 +3,34 @@ import {
   useParticipantIds,
   useDaily,
   useLocalParticipant,
+  useAppMessage,
   useDailyEvent,
+  useReceiveSettings,
 } from '@daily-co/daily-react-hooks';
 
 import './Call.css';
 import Tile from '../Tile/Tile';
 import UserMediaError from '../UserMediaError/UserMediaError';
 
+
 export default function Call() {
   /* If a participant runs into a getUserMedia() error, we need to warn them. */
 
 
 
+  const [value , setValue] = useState(1);
+
+
+
+  const [ownerSessionId, setOwnerSessionId] = useState(null);
   const callObject = useDaily();
   const [getUserMediaError, setGetUserMediaError] = useState(false);
   const isOwner = callObject._participants.local.owner;
   const [pinnedUser, setPinnedUser] = useState(null);
+
+  let [userDetails , setUserDetails] = useState({});
+
+
 
   /* We can use the useDailyEvent() hook to listen for daily-js events. Here's a full list
    * of all events: https://docs.daily.co/reference/daily-js/events */
@@ -47,27 +59,68 @@ export default function Call() {
     });
   };
 
-  useEffect(() => {
 
-    
-    if (localParticipant == null || localParticipant == undefined ) {
+  const sendAppMessage = useAppMessage({
+      onAppMessage: useCallback((ev) => {
+
+        setUserDetails(ev.data.userDetails)
+
+
+        if(localParticipant.owner == true){
+          return;
+
+        }
+
+
+
+        if (ev.data.type == 'SUBSCRIBE') {
+          callObject.updateParticipant(ev.data.msg, {
+            setSubscribedTracks: { audio: true, video: true, screenVideo: false },
+          })
+        }
+        else if(ev.data.type == 'UNSUBSCRIBE'){
+         callObject.updateParticipant(ev.data.msg, {
+            setSubscribedTracks: { audio: true, video: false, screenVideo: false },
+          })
+        }
+      }, []),
+  });
+
+  useEffect(() => {
+    if (localParticipant == null || localParticipant == undefined || value >= 2) {
       return;
     }
-
-
+    setValue(2);
     if (isOwner) {
+      setOwnerSessionId(localParticipant.session_id);
       startRecording();
     }
-    
+
+    const newUserDetails = userDetails;
+    newUserDetails[localParticipant.session_id] = false;
+
+
+    setUserDetails(newUserDetails)
     callObject.updateParticipant('local', {
       setSubscribedTracks: { audio: false, video: true, screenVideo: false },
     });
-
-
   }, [localParticipant]);
+
+
+
 
   useEffect(() => {
     callObject.on('participant-joined', (user) => {
+
+
+      const newUserDetails = userDetails;
+      newUserDetails[user.participant.session_id] = false;
+      console.log(newUserDetails);
+      setUserDetails(newUserDetails)
+
+      if(user.participant.owner == true){
+        setOwnerSessionId(user.participant.session_id);
+      }
       if (localParticipant.owner) {
         callObject.updateParticipant(user.participant.session_id, {
           setSubscribedTracks: { audio: true, video: true, screenVideo: false },
@@ -79,13 +132,15 @@ export default function Call() {
       }
       onPin(user.participant.session_id);
     });
-  }, []);
-
-  useEffect(() => {
     callObject.on('participant-updated', (user) => {
       onPin(user.participant.session_id);
     });
   }, []);
+
+
+  useEffect(() => {
+    console.log("userdetails" , userDetails);
+  }, [userDetails])
 
   let onPin = (id) => {
     setPinnedUser(id);
@@ -102,6 +157,8 @@ export default function Call() {
           <div className="pinned-user">
             {localParticipant && (
               <Tile
+              ownerSessionId = {ownerSessionId}
+                userDetails={userDetails}
                 onPin={onPin}
                 onUnpin={onUnpin}
                 id={localParticipant.session_id}
@@ -125,6 +182,8 @@ export default function Call() {
           <div className="pinned-user">
             {localParticipant && (
               <Tile
+              ownerSessionId = {ownerSessionId}
+              userDetails={userDetails}
                 onUnpin={onUnpin}
                 onPin={onPin}
                 id={localParticipant.session_id}
@@ -135,7 +194,10 @@ export default function Call() {
           </div>
           <div className="aside">
             {remoteParticipantIds.map((id) => (
-              <Tile isPinned={false} onUnpin={onUnpin} onPin={onPin} key={id} id={id} />
+              <Tile 
+              ownerSessionId = {ownerSessionId}
+              userDetails={userDetails}
+              isPinned={false} onUnpin={onUnpin} onPin={onPin} key={id} id={id} />
             ))}
           </div>
         </div>
@@ -145,6 +207,8 @@ export default function Call() {
         <div className="call">
           <div className="pinned-user">
             <Tile
+            ownerSessionId = {ownerSessionId}
+            userDetails={userDetails}
               onUnpin={onUnpin}
               id={pinnedUser}
               onPin={onPin}
@@ -158,6 +222,8 @@ export default function Call() {
               if (id == pinnedUser) {
                 return (
                   <Tile
+                  ownerSessionId = {ownerSessionId}
+                  userDetails={userDetails}
                     isPinned={false}
                     onUnpin={onUnpin}
                     onPin={onPin}
@@ -166,7 +232,12 @@ export default function Call() {
                   />
                 );
               }
-              return <Tile isPinned={false} onUnpin={onUnpin} onPin={onPin} key={id} id={id} />;
+              return <Tile
+              ownerSessionId = {ownerSessionId}
+              
+              userDetails={userDetails}
+              
+              isPinned={false} onUnpin={onUnpin} onPin={onPin} key={id} id={id} />;
             })}
           </div>
         </div>

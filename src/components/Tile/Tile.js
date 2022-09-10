@@ -1,10 +1,12 @@
 import './Tile.css';
-import { useEffect, useRef, useState } from 'react';
-import { useMediaTrack, useDaily } from '@daily-co/daily-react-hooks';
+import { useEffect, useRef, useState,   useCallback } from 'react';
+import { useMediaTrack, useDaily , useAppMessage, useLocalParticipant} from '@daily-co/daily-react-hooks';
 import Username from '../Username/Username';
 import TileVideo from '../TileVideo/TileVideo';
 
-export default function Tile({ id, isLocal, isPinned, onPin, onUnpin }) {
+
+
+export default function Tile({ id, isLocal, isPinned, onPin, onUnpin , userDetails , ownerSessionId }) {
   const audioTrack = useMediaTrack(id, 'audio');
 
   const audioElement = useRef(null);
@@ -14,8 +16,12 @@ export default function Tile({ id, isLocal, isPinned, onPin, onUnpin }) {
 
   const [activeSpeaker, setActiveSpeaker] = useState(false);
 
+  
 
-  const [faceRevealButtonForOwner , setFaceRevealButtonForOwner] = useState(false);
+
+
+
+
 
   useEffect(() => {
     callObject.on('active-speaker-change', (val) => {
@@ -84,15 +90,16 @@ export default function Tile({ id, isLocal, isPinned, onPin, onUnpin }) {
   };
 
   let sendMessage = (id) => {
-    if(faceRevealButtonForOwner == true){
-      setFaceRevealButtonForOwner(false);
-      callObject.sendAppMessage({type : "UNSUBSCRIBE" , msg : id }, '*');
+    if(userDetails[id] == true){
+      callObject.sendAppMessage({type : "UNSUBSCRIBE" , msg : id, userDetails: {...userDetails , [id] : false} }, '*' );
+      callObject.sendAppMessage({type : "UNSUBSCRIBE" , msg : id, userDetails: {...userDetails , [id] : false} }, ownerSessionId);
     }
     else{
-      setFaceRevealButtonForOwner(true);
-      callObject.sendAppMessage({ type: 'SUBSCRIBE', msg: id }, '*');
+      callObject.sendAppMessage({ type: 'SUBSCRIBE', msg:id , userDetails: {...userDetails , [id] : true}  }, '*' );
+      callObject.sendAppMessage({ type: 'SUBSCRIBE', msg:id , userDetails: {...userDetails , [id] : true}  } , ownerSessionId);
+
     }
-  };
+  } ;
 
   return (
     <div
@@ -101,16 +108,17 @@ export default function Tile({ id, isLocal, isPinned, onPin, onUnpin }) {
         outline: activeSpeaker == true ? '3px solid lightblue' : 'none',
       }}
       className={containerCssClasses}>
+        {
+          isOwner == false && isLocal == true && userDetails[id]==false &&<div className='modal'></div>
+        }
       {<TileVideo id={id} />}
       {!isLocal && audioTrack && <audio autoPlay playsInline ref={audioElement} />}
       <div className="user-info-container">
         <Username id={id} isLocal={isLocal} />
         {pinUnpin()}
-
-
         {isOwner == true && (
           <div className="subscribe-button" onClick={() => sendMessage(id)}>
-            <div style={{width: "15px" , height: "15px" , borderRadius: "100%" , backgroundColor : faceRevealButtonForOwner == false ? "red": "green"}} ></div>
+            <div style={{width: "15px" , height: "15px" , borderRadius: "100%" , backgroundColor : userDetails[id] == false ? "red": "green"}} ></div>
           </div>
         )}
       </div>
