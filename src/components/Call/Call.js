@@ -64,15 +64,9 @@ export default function Call() {
       onAppMessage: useCallback((ev) => {
 
         setUserDetails(ev.data.userDetails)
-
-
         if(localParticipant.owner == true){
           return;
-
         }
-
-
-
         if (ev.data.type == 'SUBSCRIBE') {
           callObject.updateParticipant(ev.data.msg, {
             setSubscribedTracks: { audio: true, video: true, screenVideo: false },
@@ -95,11 +89,8 @@ export default function Call() {
       setOwnerSessionId(localParticipant.session_id);
       startRecording();
     }
-
     const newUserDetails = userDetails;
     newUserDetails[localParticipant.session_id] = false;
-
-
     setUserDetails(newUserDetails)
     callObject.updateParticipant('local', {
       setSubscribedTracks: { audio: false, video: true, screenVideo: false },
@@ -114,8 +105,9 @@ export default function Call() {
 
 
       const newUserDetails = userDetails;
+
+
       newUserDetails[user.participant.session_id] = false;
-      console.log(newUserDetails);
       setUserDetails(newUserDetails)
 
       if(user.participant.owner == true){
@@ -137,11 +129,6 @@ export default function Call() {
     });
   }, []);
 
-
-  useEffect(() => {
-    console.log("userdetails" , userDetails);
-  }, [userDetails])
-
   let onPin = (id) => {
     setPinnedUser(id);
   };
@@ -149,6 +136,10 @@ export default function Call() {
   let onUnpin = () => {
     setPinnedUser(null);
   };
+
+  let copyRoomUrl = (roomUrl) => {
+    navigator.clipboard.writeText(roomUrl);
+  }
 
   const renderCallScreen = () => {
     if (isAlone) {
@@ -171,7 +162,9 @@ export default function Call() {
             <div className="info-box">
               <h1>Waiting for others</h1>
               <p>Invite someone by sharing this link:</p>
-              <span className="room-url">{window.location.href}</span>
+              <div onClick={() => copyRoomUrl(window.location.href)}    className='room-url-box'>
+                Click to Copy
+              </div>
             </div>
           </div>
         </div>

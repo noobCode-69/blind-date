@@ -75,14 +75,13 @@
 .info-box {
   background: var(--dark-blue-border);
   color: var(--white);
-  /* width: 480px; */
   flex-shrink: 1;
   height: 270px;
   display: flex;
   justify-content: center;
   flex-direction: column;
   text-align: center;
-  padding: 3rem;
+  padding: 1;
   box-sizing: border-box;
   border-radius: 4px;
 }
@@ -93,6 +92,27 @@
     height: auto;
     padding: 2rem 1rem;
   }
+}
+
+
+.room-url-box{
+  align-self: center;
+  position: relative;
+  padding: 0.5rem 2rem;
+
+  border-radius: 1rem;
+  font-weight: bold;
+  background-color: var(--turquoise);
+
+
+
+}
+
+
+
+.room-url-box:hover{
+  cursor: pointer;
+  background-color : #7af7da;
 }
 
 .room-url {

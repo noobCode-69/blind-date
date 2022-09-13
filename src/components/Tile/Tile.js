@@ -7,22 +7,20 @@ import TileVideo from '../TileVideo/TileVideo';
 
 
 export default function Tile({ id, isLocal, isPinned, onPin, onUnpin , userDetails , ownerSessionId }) {
+
+
+
   const audioTrack = useMediaTrack(id, 'audio');
 
   const audioElement = useRef(null);
 
+  console.log("islocal", isLocal)
   const callObject = useDaily();
   const isOwner = callObject._participants.local.owner;
 
   const [activeSpeaker, setActiveSpeaker] = useState(false);
 
   
-
-
-
-
-
-
   useEffect(() => {
     callObject.on('active-speaker-change', (val) => {
       const speaker = val.activeSpeaker.peerId;
@@ -109,7 +107,19 @@ export default function Tile({ id, isLocal, isPinned, onPin, onUnpin , userDetai
       }}
       className={containerCssClasses}>
         {
-          isOwner == false && isLocal == true && userDetails[id]==false &&<div className='modal'></div>
+          isOwner == false && isLocal == true  && userDetails[id] == false &&
+          
+          <div className='icon'>
+
+             <img src='https://cdn0.iconfinder.com/data/icons/photography-solid-4/32/Photography_camera_no_off_forbidden_photo_video-512.png'/> 
+          </div>
+        }
+
+
+        {
+          isOwner == false && isLocal == undefined && userDetails[id]==false && <div className='modal'>
+            <h1>Hidden</h1>
+          </div>
         }
       {<TileVideo id={id} />}
       {!isLocal && audioTrack && <audio autoPlay playsInline ref={audioElement} />}
@@ -118,7 +128,7 @@ export default function Tile({ id, isLocal, isPinned, onPin, onUnpin , userDetai
         {pinUnpin()}
         {isOwner == true && (
           <div className="subscribe-button" onClick={() => sendMessage(id)}>
-            <div style={{width: "15px" , height: "15px" , borderRadius: "100%" , backgroundColor : userDetails[id] == false ? "red": "green"}} ></div>
+            <div style={{backgroundColor : userDetails[id] == true ? "green" : "red"}} className='indicator-button' ></div>
           </div>
         )}
       </div>
