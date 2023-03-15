@@ -1,4 +1,4 @@
-# BlindDate (Video Chatting React App)
+# BlindDate (Video Chat React App)
 
 This project was a paid project that was developed jointly by myself and [Harshil](https://github.com/Harshil0309). 
 The client requirement was to create a web app with video conferencing features, with a twist of playing dating games on it.
