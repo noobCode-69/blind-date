@@ -1,9 +1,8 @@
 # BlindDate (Video Chatting React App)
-**<span style="color:red">This text will appear in red</span>**
 
 This project was a paid project that was developed jointly by myself and Harshil. 
 The client requirement was to create a web app with video conferencing features, with a twist of playing dating games on it.
-However, this project is no longer under maintenance, and we kindly request that you do not use it.
+``` - However, this project is no longer under maintenance, and we kindly request that you do not use it.```
 
 ## Features
 1) Video conferencing feature for online meetings and conversations.
