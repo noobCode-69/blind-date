@@ -1,100 +1,25 @@
-# Custom React video app with Daily React Hooks
+# BlindDate (Video Chatting React App)
 
-This repository is part of [a Daily blog post series](<[https://www.daily.co/blog/custom-video-app-with-daily-react-hooks-part-one/](https://www.daily.co/blog/tag/daily-react-hooks/)>) on using the [Daily React Hooks library](https://www.daily.co/blog/introducing-the-new-daily-react-hooks-library/) to create a custom video calling app.
-
-|                                                                                                                                                                                                     |                                                                                                                                |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| ![Prejoin UI](https://lh5.googleusercontent.com/pybG1ZczFSgh_wn5j-LEobidbl1TgjTj9bZxOdj1UbYH5XH-XoBBBH7ZIREx4QD_8LlgSpL-vXNFVlcNPedq2poGFhvNPZhWb5XqWzXwNBpxbzc2JoEwUBwKH4B1U1Y5qgTLDuvrfKvwkwKD5g) | ![in-call UI with multiple participants](https://www.daily.co/blog/content/images/size/w1600/2022/05/end-of-this-post-opt.png) |
-| ![in-call UI with one participant](https://www.daily.co/blog/content/images/size/w1600/2022/05/waiting-for-others-opt.png)                                                                          | ![Active screen share](https://www.daily.co/blog/content/images/size/w1600/2022/05/screenshare-opt.png)                        |
-| ![Chat UI](https://www.daily.co/blog/content/images/2022/06/ss1.png)                                                                                                                                |
+This project was a paid project that was developed jointly by myself and Harshil. 
+The client requirement was to create a web app with video conferencing features, with a twist of playing dating games on it.
+However, this project is no longer under maintenance, and we kindly request that you do not use it.
 
 ## Features
+1) Video conferencing feature for online meetings and conversations.
+2) Face Reveal  feature for a fun and interactive way to meet new people , where the owner can reveal the face of participants
+3) Real-time messaging for users to communicate with each other during the video call.
+4) Video Recording feature .
+5) Live streaming features.
+## Technologies Used
+1) React for the front-end
+2) Daily.co API for doing all the heavylifting
+Socket.io for real-time messaging
 
-This app includes:
+## Getting Started
+As mentioned earlier, this project is no longer under maintenance and should not be used. However, if you are interested in building a similar project, feel free to check out the technologies we used and implement them in your own project.
 
-- Custom video tiles using Daily's APIs for multi-participant calls
-- A tray for local device management
-- Prejoin UI for device management before joining the call
-- Screen sharing
-- Custom text-based chat while in the call
-- Custom usernames
-- "Waiting for others" card
+## Conclusion
+This project was a great learning experience for both myself and Harshil. It allowed us to work on a real-world project with specific client requirements, which helped us develop our skills and gain more experience. Although this project is no longer under maintenance, we are proud of what we accomplished and the skills we acquired while working on it.
 
-This is a demo app meant to showcase how to interact with the Daily APIs. It is not optimized for large calls. (Read our [large meetings series](https://www.daily.co/blog/tag/large-meeting-series/) for more information.)
 
-## Tutorial series
 
-Find our full series on how we built this app on the [Daily blog](https://www.daily.co/blog/tag/daily-react-hooks/).
-
-The first post in the series covers how to [build the video components](https://www.daily.co/blog/custom-video-app-with-daily-react-hooks-part-one/). The code in the [v1.0](https://github.com/daily-demos/custom-video-daily-react-hooks/tree/1.0) tag corresponds to this blog post.
-
-The second post in the series covers how to build a [prejoin UI](https://www.daily.co/blog/add-a-prejoin-ui-to-a-custom-video-app-with-the-daily-react-hooks-library-part-2/). The code relevant to this post can be found in the [v2.0](https://github.com/daily-demos/custom-video-daily-react-hooks/tree/v2.0) tag.
-
-The third post in the series covers how to build a [custom chat widget](https://www.daily.co/blog/add-chat-to-your-custom-video-app-with-daily-react-hooks-part-3/).
-
-All features mentioned above are available on `main`. Earlier versions exclude later features.
-
-Deployed versions of the demo can be found below:
-
-- main: [main](https://daily-react-hooks.netlify.app/)
-- v1.0: [custom-video-daily-react-hooks-v1](https://custom-video-daily-react-hooks-v1.netlify.app)
-- v2.0: [custom-video-daily-react-hooks-v2](https://custom-video-daily-react-hooks-v2.netlify.app)
-
----
-
-## Requirements
-
-To use this demo, you will first need to [create a Daily account](https://dashboard.daily.co/signup). You will also need a Daily room URL, which you can get via two options in this demo:
-
-- To create new Daily rooms directly through this demo's UI, you will need your Daily API key, which can be found on the [Developers](https://dashboard.daily.co/developers) page. This will be used in your environment variables. (Instructions below.)
-- Alternatively, you can use existing Daily rooms in the demo by pasting the room URL into the input. The room URL should be in this format to be valid: `https://your-domain.daily.co/room-name`, with `daily-domain` changed to your domain, and `room-name` changed to the name of the existing room you would like to use.
-
----
-
-## Running locally
-
-To run this demo locally:
-
-1. Install dependencies `npm install`
-2. Start dev server `npm start`
-3. Then open your browser and go to `http://localhost:3000`.
-
-### Creating new rooms locally
-
-To create rooms new rooms via the app UI while testing locally, follow these additional steps:
-
-- rename `example.env` to `.env`
-- add your Daily API key (available in the Daily [dashboard](https://dashboard.daily.co/developers)) to `.env`
-
-```
-REACT_APP_DAILY_API_KEY=<-Your Daily API key here->
-```
-
-- In `api.js`, comment out the default request and uncomment the local request.
-
-```javascript
-// api.js
-// make sure this request is uncommented and the one above it is commented out
-const response = await fetch(`https://api.daily.co/v1/rooms/`, {
-  method: 'POST',
-  body: JSON.stringify(options),
-  headers: {
-    'Content-Type': 'application/json',
-    Authorization: 'Bearer ' + process.env.REACT_APP_DAILY_API_KEY,
-  },
-});
-```
-
-- Restart your server, i.e. re-run `npm start`
-
-OR...
-
-## Deploy on Netlify
-
-If you want access to the Daily REST API (using the proxy as specified in `netlify.toml`), you can deploy your own copy of this repo with one click via Netlify:
-
-[![Deploy with Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/daily-demos/custom-video-daily-react-hooks)
-
-Note: You'll need your [Daily API key](https://dashboard.daily.co/developers) handy for this step.
-
-Visit the deployed domain provided by Netlify after completing this step to view the app.
