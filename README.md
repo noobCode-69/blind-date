@@ -1,4 +1,5 @@
 # BlindDate (Video Chatting React App)
+<span style="color:red">This text will appear in red</span>
 
 This project was a paid project that was developed jointly by myself and Harshil. 
 The client requirement was to create a web app with video conferencing features, with a twist of playing dating games on it.
